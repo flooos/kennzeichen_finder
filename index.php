@@ -28,6 +28,7 @@ require_once("UserPie/models/config.php");
         <div class="row">
 			<div class="col-md-12">
             
+            <!--Navigation-->
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">
@@ -51,14 +52,12 @@ require_once("UserPie/models/config.php");
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="username">User</span> <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <!--<li role="separator" class="divider"></li>
-                                    <li class="dropdown-header">Mein Account</li>-->
                                     <li><a href="javascript:doLogout()">Abmelden</a></li>
                                 </ul>
                             </li>
                         </ul>
-                    </div><!--/.nav-collapse -->
-                </div><!--/.container-fluid -->
+                    </div>
+                </div>
             </nav>
       
 				</div>
@@ -70,28 +69,34 @@ require_once("UserPie/models/config.php");
                 </div>
             </div>
             
+            <!--Eingabefled Nummernschild-->
         	<div class="row">
 				<div class="col-md-12" id="plateOuter">
             		<input type="text" id="plate" class="form-control" placeholder="B" onKeyUp="checkPlate()"> <!--this.value-->
             	</div>
             </div>
             
+            <!--Hinweistext default-->
             <div class="row standardBox defaultRow">
 				<div class="col-sm-12 col-md-12">
                 	Geben Sie ein Kennzeichenkürzel ein, um die Suche zu starten.
             	</div>
             </div>
             
+            <!--Ergebnisbox-->
         	<div class="row standardBox resultRow">
+            	<!--Leeres Div für Ergebnis-->
 				<div class="col-sm-12 col-md-6" id="result">
             	</div>
 				<div class="col-sm-12 col-md-6">
-                	<div id="map">
-            		</div>
+                	<!--Leeres Div für Google Maps Karte-->
+                	<div id="map"></div>
                 </div>
             </div>
             
+            <!--Kommentarbox-->
         	<div class="row standardBox commentRow">
+                <!--Anzeigen, wenn eingeloggt-->
                 <div class="authenticated">
                     <div class="col-sm-12 commentBoxArea">
                         <div class="left">
@@ -99,7 +104,7 @@ require_once("UserPie/models/config.php");
                         </div>
                         <div class="left CommentFullWidth">
                         <form action="javascript:" method="post">
-                            <textarea name="comment" id="commentArea" onClick="emptyCommentField(this.value)">Kommentar eingeben ...</textarea>
+                            <textarea name="comment" class="form-control" id="commentArea" onClick="emptyCommentField(this.value)">Kommentar eingeben ...</textarea>
                             <div class="selectedCommentArea">
                                 <input type="submit" class="btn btn-default" value="Speichern" onClick="saveComment()" />
                             </div>
@@ -109,9 +114,11 @@ require_once("UserPie/models/config.php");
                         </div>
                     </div>
                 </div>
+                <!--Anzeigen, wenn nicht angemeldet-->
                 <div class="bg-warning loginInfo notauthenticated">
                 	Melden Sie sich an, um Kommentare zu schreiben.
                 </div>
+                <!--Leeres Div für Kommentare-->
                 <div class="col-xs-12 col-md-12" id="comments">
                 </div>
                 <div class="clear">
@@ -120,6 +127,7 @@ require_once("UserPie/models/config.php");
             
     	</div>
         
+        <!--Anmelde Diaglog-->
         <div class="modal fade" tabindex="-1" role="dialog" id="loginDialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -128,23 +136,24 @@ require_once("UserPie/models/config.php");
                     </div>
                     <form onSubmit="doLogin(); return false" method="post">
                         <div class="modal-body">
+                        	<!--Leeres Div für Error-Meldungen-->
                             <div id="loginError">
                             </div>
                             <div class="row">
                                 <div class="col-xs-2">
                                     <div class="formLable">
-                                        Nutzername:
+                                        Nutzername
                                     </div>
                                     <div class="formLable">
-                                        Passwort:
+                                        Passwort
                                     </div>
                                 </div>
                                 <div class="col-xs-10">
                                     <div class="formInput">
-                                        <input type="text" class="form" name="username" />
+                                        <input type="text" class="form-control" name="username" />
                                     </div>
                                     <div class="formInput">
-                                        <input type="password" class="form" name="password" />
+                                        <input type="password" class="form-control" name="password" />
                                     </div>
                                 </div>
                             </div>
@@ -154,10 +163,11 @@ require_once("UserPie/models/config.php");
                             <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                         </div>
                     </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
         
+        <!--Abmeldeinfo Dialog-->
         <div class="modal fade" tabindex="-1" role="dialog" id="logoutSuccessDialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -172,10 +182,11 @@ require_once("UserPie/models/config.php");
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
                     </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
         
+        <!--Kommentar bearbeiten Dialog-->
         <div class="modal fade" tabindex="-1" role="dialog" id="editComment" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -184,7 +195,7 @@ require_once("UserPie/models/config.php");
                     </div>
                     <form onSubmit="saveEditComment(); return false" method="post">
                         <div class="modal-body">
-                            <textarea name="editComment" id="editCommentArea"></textarea>
+                            <textarea name="editComment" class="form-control" id="editCommentArea"></textarea>
                             <input type="hidden" name="commentId" />
                         </div>
                         <div class="modal-footer">
@@ -192,10 +203,11 @@ require_once("UserPie/models/config.php");
                             <button type="button" class="btn btn-default" data-dismiss="modal" onClick="getProtocol()">Abbrechen</button>
                         </div>
                     </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
         
+        <!--Registrieren Dialog-->
         <div class="modal fade" tabindex="-1" role="dialog" id="registerDialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -204,40 +216,43 @@ require_once("UserPie/models/config.php");
                     </div>
                     <form onSubmit="doRegister(); return false" method="post">
                         <div class="modal-body">
+                        	<!--Leeres Div für Error-Meldungen-->
                             <div id="registerError">
                             </div>
+                            <!--Registrier-Div standardgemäß eingeblendet-->
                             <div class="registerForm">
                                 <div class="row">
                                     <div class="col-xs-5 col-sm-3">
                                     	<div class="formLable">
-                                        	Nutzername:
+                                        	Nutzername
                                         </div>
                                     	<div class="formLable">
-                                        	Passwort:
+                                        	Passwort
                                         </div>
                                     	<div class="formLable">
-                                        	Passwort wdh:
+                                        	Passwort wdh
                                         </div>
                                     	<div class="formLable">
-                                        	E-Mail:
+                                        	E-Mail
                                         </div>
                                     </div>
                                     <div class="col-xs-7 col-sm-9">
                                    		<div class="formInput">
-                                    		<input type="text" name="reg_username" />
+                                    		<input type="text" class="form-control" name="reg_username" />
                                         </div>
                                    		<div class="formInput">
-                                			<input type="password" name="reg_password" />
+                                			<input type="password" class="form-control" name="reg_password" />
                                         </div>
                                    		<div class="formInput">
-                                			<input type="password" name="reg_passwordc" />
+                                			<input type="password" class="form-control" name="reg_passwordc" />
                                         </div>
                                    		<div class="formInput">
-                                			<input type="email" name="reg_email" />
+                                			<input type="email" class="form-control" name="reg_email" />
                                         </div>
                                     </div>
                                 </div> 
                             </div>
+                            <!--Erfolgsnachricht-Div standardgemäß ausgeblendet-->
                             <div class="registerDone">
                                 <p>
                                     Sie haben sich erfolgreich registriert und können sich nun anmelden!
@@ -255,10 +270,11 @@ require_once("UserPie/models/config.php");
                             </div>
                         </div>
                     </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
         
+        <!--Aktivitätsprotokoll Dialog-->
         <div class="modal fade" tabindex="-1" role="dialog" id="protocolDialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -270,11 +286,13 @@ require_once("UserPie/models/config.php");
                     	<li role="presentation" id="navProtocolComments" onClick="protocolSwitchTo('comments')" class="active"><a href="#">Kommentare</a></li>
                         <li role="presentation" id="navProtocolLikes" onClick="protocolSwitchTo('likes')"><a href="#">Gefällt mir-Angaben</a></li>
                     </ul>
+                    	<!--Kommentar-Div standardgemäß eingeblendet-->
                         <div id="protocolComments">
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>Datum</th>
+                                        <th>Ort</th>
                                         <th>Kommentar</th>
                                         <th>Optionen</th>
                                     </tr>
@@ -283,6 +301,7 @@ require_once("UserPie/models/config.php");
                                 </tbody>
                             </table>  
                         </div>
+                        <!--Like-Div standardgemäß ausgeblendet-->
                         <div id="protocolLikes">
                             <table class="table table-striped">
                                 <thead>
@@ -311,9 +330,11 @@ require_once("UserPie/models/config.php");
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
         
+        <!--Google Maps Einbindung-->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeaL0cr-RyGcEASkTnjCgYROXxi38cAf4&signed_in=false&callback=initMap"
         async defer></script>
         
+        <!--Lokale js-Datei -->
         <script src="js/kennzeichen_finder.js"></script>
         
     </body>

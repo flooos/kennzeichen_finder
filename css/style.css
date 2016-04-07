@@ -49,9 +49,6 @@ input#plate::-webkit-input-placeholder {
 .registerForm {
 	display:block;
 }
-#map {
-	display:none;
-}
 .selectedCommentArea {
 	display:none;
 }
@@ -142,7 +139,7 @@ input#plate::-webkit-input-placeholder {
 	padding:10px 15px;
 }
 .formLable {
-	margin:15px 0;
+	margin:15px 0 25px 0;
 	font-weight:bold;
 }
 .formInput {
@@ -158,4 +155,9 @@ input#plate::-webkit-input-placeholder {
 }
 #protocolLikes {
 	display:none;
+}
+xmp {
+	display: initial;
+    font-family: inherit;
+	white-space:pre-wrap;
 }
