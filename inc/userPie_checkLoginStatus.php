@@ -9,9 +9,11 @@
 	
 	//Prevent the user visiting the logged in page if he/she is already logged in
 	if(isUserLoggedIn()) {
-		echo '{"loggedIn":true}';
-		die();
+		$status = array( "loggedIn" => true );
+		//die();
 	}
 	else
-		echo '{"loggedIn":false}';
+		$status = array( "loggedIn" => false );
+		
+	print json_encode($status);
 ?>

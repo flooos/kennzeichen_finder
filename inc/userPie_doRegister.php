@@ -83,7 +83,8 @@ if(!empty($_POST))
 	   }
 	   else
 	   {
-				echo '{"registered":false,"errors":"&middot; '.implode("<p>&middot; ", $errors).'</p>"}';
+				$status = array( "registered" => false, "errors" => implode("<p>&middot; ", $errors));
 	   }
+	   print json_encode($status);
 	}
 ?>

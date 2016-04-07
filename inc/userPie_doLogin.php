@@ -19,22 +19,27 @@
 //Forms posted
 if(!empty($_POST))
 {
+		session_unset();
+		session_destroy();
+		session_write_close();
+		setcookie(session_name(),'',0,'/');
+		session_regenerate_id(true);
+	
 		$errors = array();
 		$username = trim($_POST["username"]);
 		$password = trim($_POST["password"]);
-		$remember_choice = trim($_POST["remember_me"]);
+		$remember_choice = 1;
+		//$remember_choice = trim($_POST["remember_me"]);
 	
 		//Perform some validation
 		//Feel free to edit / change as required
 		if($username == "")
 		{
 			$errors[] = lang("ACCOUNT_SPECIFY_USERNAME");
-			echo '{"loggedIn":false}';
 		}
 		if($password == "")
 		{
 			$errors[] = lang("ACCOUNT_SPECIFY_PASSWORD");
-			echo '{"loggedIn":false}';
 		}
 		
 		//End data validation
@@ -44,7 +49,6 @@ if(!empty($_POST))
 			if(!usernameExists($username))
 			{
 				$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
-				echo '{"loggedIn":false}';
 			}
 			else
 			{
@@ -54,7 +58,6 @@ if(!empty($_POST))
 				if($userdetails["active"]==0)
 				{
 					$errors[] = lang("ACCOUNT_INACTIVE");
-					echo '{"loggedIn":false}';
 				}
 				else
 				{
@@ -65,7 +68,6 @@ if(!empty($_POST))
 					{
 						//Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
 						$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
-						echo '{"loggedIn":false}';
 					}
 					else
 					{
@@ -84,20 +86,24 @@ $loggedInUser->remember_me_sessid = generateHash(uniqid(rand(), true));
 						
 						//Update last sign in
 						$loggedInUser->updatelast_sign_in();
-		
+
 						if($loggedInUser->remember_me == 0)
 $_SESSION["userPieUser"] = $loggedInUser;
 else if($loggedInUser->remember_me == 1) {
 $db->sql_query("INSERT INTO ".$db_table_prefix."sessions VALUES('".time()."', '".serialize($loggedInUser)."', '".$loggedInUser->remember_me_sessid."')");
-setcookie("userPieUser", $loggedInUser->remember_me_sessid, time()+parseLength($remember_me_length));
+setcookie("userPieUser", $loggedInUser->remember_me_sessid, time()+parseLength($remember_me_length),'/','localhost', false, true);
 }
 						
 						//Redirect to user account page
-						echo '{"loggedIn":true}';
-						die();
+						$status = array( "loggedIn" => true );
+						//die();
 					}
 				}
 			}
 		}
+		else
+			$status = array( "loggedIn" => false, "errors" => implode("<p>&middot; ", $errors));
+			
+		print json_encode($status);
 	}
 ?>

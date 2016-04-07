@@ -9,6 +9,7 @@
 	//General Settings
 	//--------------------------------------------------------------------------
 	
+	
 	//Database Information
 	$dbtype = "mysql"; 
 	$db_host = "localhost";

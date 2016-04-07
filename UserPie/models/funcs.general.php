@@ -116,6 +116,7 @@ function destorySession($name)
 	   if($loggedInUser->remember_me == 0) { 
 		if(isset($_SESSION[$name]))
 		{
+			
 			$_SESSION[$name] = NULL;
 			unset($_SESSION[$name]);
 			$loggedInUser = NULL;
@@ -125,10 +126,20 @@ function destorySession($name)
 		if(isset($_COOKIE[$name]))
 		{
 			$db->sql_query("DELETE FROM ".$db_table_prefix."sessions WHERE session_id = '".$loggedInUser->remember_me_sessid."'");
-			setcookie($name, "", time() - parseLength($remember_me_length));
+			setcookie($name, "", time() - time()-3600, '/', 'localhost', false, true);
+			$loggedInUser = NULL;
+			
+			$_SESSION[$name] = NULL;
+			unset($_SESSION[$name]);
 			$loggedInUser = NULL;
 		}
-	} 
+	}
+	
+    session_unset();
+    session_destroy();
+    session_write_close();
+    setcookie(session_name(),'',0,'/');
+    session_regenerate_id(true);
 }
 
 // Update the session data

@@ -18,15 +18,15 @@
 		{
 			$add_http = "http://";
 		}
-	
-		echo '{"loggedOut":true}';
-		die();
+		$status = array( "loggedOut" => true );
+		//die();
 	}
 	else
 	{
-		echo '{"loggedOut":true}';
-		die();
-	}	
+		$status = array( "loggedOut" => true );
+		//die();
+	}
+	print json_encode($status);
 ?>
 
 

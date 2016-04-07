@@ -46,6 +46,7 @@
 	require_once(dirname(__FILE__)."/class.newuser.php");
 
 	session_start();
+	setcookie(session_name(),session_id(),time()+3600,'/','localhost',false,true);
 	
 //Global User Object Var
 //loggedInUser can be used globally if constructed
