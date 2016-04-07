@@ -176,6 +176,26 @@ require_once("UserPie/models/config.php");
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
         
+        <div class="modal fade" tabindex="-1" role="dialog" id="editComment" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Kommentar bearbeiten</h4>
+                    </div>
+                    <form onSubmit="saveEditComment(); return false" method="post">
+                        <div class="modal-body">
+                            <textarea name="editComment" id="editCommentArea"></textarea>
+                            <input type="hidden" name="commentId" />
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary" id="newfeedform" value="Speichern" />
+                            <button type="button" class="btn btn-default" data-dismiss="modal" onClick="getProtocol()">Abbrechen</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        
         <div class="modal fade" tabindex="-1" role="dialog" id="registerDialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -246,8 +266,37 @@ require_once("UserPie/models/config.php");
                         <h4 class="modal-title">Aktivitätsprotokoll</h4>
                     </div>
                     <div class="modal-body">
-                        <div id="protocolData">  
-                        </div>   
+                    <ul class="nav nav-tabs">
+                    	<li role="presentation" id="navProtocolComments" onClick="protocolSwitchTo('comments')" class="active"><a href="#">Kommentare</a></li>
+                        <li role="presentation" id="navProtocolLikes" onClick="protocolSwitchTo('likes')"><a href="#">Gefällt mir-Angaben</a></li>
+                    </ul>
+                        <div id="protocolComments">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Datum</th>
+                                        <th>Kommentar</th>
+                                        <th>Optionen</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="protocolData">
+                                </tbody>
+                            </table>  
+                        </div>
+                        <div id="protocolLikes">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Datum</th>
+                                        <th>Ort</th>
+                                        <th>Landkreis</th>
+                                        <th>Optionen</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="protocolDataLikes">
+                                </tbody>
+                            </table>  
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>

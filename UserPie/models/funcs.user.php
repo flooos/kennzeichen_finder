@@ -74,7 +74,7 @@
 	{
 		global $db,$db_table_prefix;
 		
-		$sql = "UPDATE ".$db_table_prefix."users
+		$sql = " ".$db_table_prefix."users
 		 		SET active = 1
 				WHERE
 				activationtoken ='".$db->sql_escape(trim($token))."'
@@ -115,7 +115,7 @@
 	{
 		global $db,$db_table_prefix;
 		
-		$sql = "UPDATE ".$db_table_prefix."users
+		$sql = " ".$db_table_prefix."users
 				SET LostpasswordRequest = '".$value."'
 				WHERE
 				username_clean ='".$db->sql_escape(sanitize($username))."'
@@ -125,13 +125,13 @@
 		return ($db->sql_query($sql));
 	}
 	
-	function updatepasswordFromToken($pass,$token)
+	function passwordFromToken($pass,$token)
 	{
 		global $db,$db_table_prefix;
 		
 		$new_activation_token = generateactivationtoken();
 		
-		$sql = "UPDATE ".$db_table_prefix."users
+		$sql = " ".$db_table_prefix."users
 				SET password = '".$db->sql_escape($pass)."',
 				activationtoken = '".$new_activation_token."'
 				WHERE
@@ -229,7 +229,7 @@
 		return $gen;
 	}
 	
-	function updatelast_activation_request($new_activation_token,$username,$email)
+	function last_activation_request($new_activation_token,$username,$email)
 	{
 		global $db,$db_table_prefix; 
 		

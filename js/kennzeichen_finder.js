@@ -11,16 +11,19 @@ function checkPlate() {
 		url: "inc/getPlateInfo.php",
 		type: "POST",
 		dataType:'json',
-		data: {"plate":encodeURIComponent($("#plate").val())},
+		data: {"plate":encodeURIComponent($("#plate").val().toUpperCase())},
 		success: function(obj){
 			if(!$.isEmptyObject(obj)) {
-				$("#result").html('<div class="county">'+obj[0].county+'</div><div class="state">'+obj[0].state+'</div>');
+				$("#result").html('<div class="county">'+obj[0].county+'</div><div class="state">'+obj[0].state+'</div><div class="actionList"><span class="myLike"><span class="laterAuthenticated"><button type="button" class="btn btn-default btn-xs" onClick="likePlace()"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> Gefällt mir</button>&nbsp;&nbsp;</span></span><span class="likePlace"><span class="likePlaceAmount">0-</span> gefällt dieser Ort</span></div>');
+				checkMyLike();
+				getPlaceLikes();
+				getComments();
 				initMap(obj[0].county+' '+obj[0].state);
 				$('#map').show();
-				getComments();
 				$('.commentRow').show();
 				$('.defaultRow').hide();
 				$('.resultRow').show();
+				checkLoginStatus();
 			}
 			else {
 				$("#result").html("Starten Sie Ihre Suche");
@@ -34,6 +37,67 @@ function checkPlate() {
 	});
 }
 
+function dontLikePlace(plate) {
+	if(plate)
+		dataVal = {"plate":encodeURIComponent(plate.replace(/\s/g,"").toUpperCase())};
+	else
+		dataVal = {"plate":encodeURIComponent($("#plate").val().toUpperCase())};
+	$.ajax({
+		url: "inc/dontLikePlace.php",
+		type: "POST",
+		dataType:'json',
+		data: dataVal,
+		success: function(obj){
+			checkMyLike();
+			getPlaceLikes();
+		}
+	});	
+}
+
+function likePlace() {
+	$.ajax({
+		url: "inc/likePlace.php",
+		type: "POST",
+		dataType:'json',
+		data: {"plate":encodeURIComponent($("#plate").val().toUpperCase())},
+		success: function(obj){
+			checkMyLike();
+			getPlaceLikes();
+		}
+	});	
+}
+
+function checkMyLike() {
+	$.ajax({
+		url: "inc/checkMyLike.php",
+		type: "POST",
+		dataType:'json',
+		data: {"plate":encodeURIComponent($("#plate").val().toUpperCase())},
+		success: function(obj){
+			if(!$.isEmptyObject(obj)) {
+				$('.myLike').html('<span class="laterAuthenticated"><button type="button" class="btn btn-primary btn-xs" onClick="dontLikePlace()"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Dir gefällt das</button>&nbsp;&nbsp;</span>');
+			}
+			else {
+				$('.myLike').html('<span class="laterAuthenticated"><button type="button" class="btn btn-default btn-xs" onClick="likePlace()"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> Gefällt mir</button>&nbsp;&nbsp;</span>');				
+			}
+		}
+	});	
+}
+
+function getPlaceLikes() {
+	$.ajax({
+		url: "inc/getPlaceLikes.php",
+		type: "POST",
+		dataType:'json',
+		data: {"plate":encodeURIComponent($("#plate").val().toUpperCase())},
+		success: function(obj){
+			if(!$.isEmptyObject(obj)) {
+				$('.likePlaceAmount').html(obj.amount);
+			}
+		}
+	});	
+}
+
 function doLogin() {
 	$.ajax({
 		url: "inc/userPie_doLogin.php",
@@ -44,9 +108,12 @@ function doLogin() {
 			if(obj.loggedIn) {
 				checkLoginStatus();
 				$('#loginError').hide();
-				$('#loginDialog').modal('toggle'); 
+				$('#loginDialog').modal('toggle');
+				$('[name=username]').val('');
+				$('[name=password]').val('');
 			}
 			else {
+				$('#loginError').html('');
 				$('#loginError').show();
 				$.each(obj.errors, function (key, data) {
 					$('#loginError').append('<p class="bg-warning error">&middot; '+data+'</p>');
@@ -82,13 +149,16 @@ function doRegister() {
 		data: {"username":encodeURIComponent($("[name=reg_username]").val()),"password":$("[name=reg_password]").val(),"passwordc":$("[name=reg_passwordc]").val(),"email":$("[name=reg_email]").val()},
 		success: function(obj){
 			if(obj.registered) {
-				console.log("registriert");
 				$('#registerError').hide();
 				$('.registerForm').hide();
 				$('.registerDone').show();
+				$('[name=reg_username]').val('');
+				$('[name=reg_password]').val('');
+				$('[name=reg_passwordc]').val('');
+				$('[name=reg_email]').val('');
 			}
 			else {
-				console.log("nicht registriert");
+				$('#registerError').html('');
 				$('#registerError').show();
 				$.each(obj.errors, function (key, data) {
 					$('#registerError').append('<p class="bg-warning error">&middot; '+data+'</p>');
@@ -105,10 +175,8 @@ function getComments() {
 		url: "inc/getComments.php",
 		type: "POST",
 		dataType:'json',
-		data: {"plate":encodeURIComponent($("#plate").val())},
+		data: {"plate":encodeURIComponent($("#plate").val().toUpperCase())},
 		success: function(obj){
-			
-		setSizes();
 			$('#comments').html('<div id="commentsData"></div>');
 			$.each(obj, function (key, data) {
 				hour = data.date.substr(11,2)+':';
@@ -116,15 +184,9 @@ function getComments() {
 				day = data.date.substr(8,2)+'.';
 				month = data.date.substr(5,2)+'.';
 				year = data.date.substr(0,4)+' um ';
-    			$('#commentsData').append('<div class="bg-info commentOuter"><div class="left"><img src="img/user.svg" alt="User" class="img-circle userImage"></div><div class="left"><div class="commentName">'+data.username+'</div><div class="commentText">'+decodeURIComponent(data.text)+'</div><div class="commentDate">'+day+month+year+hour+minute+'</div></div><div class="clear"></div></div>');
+    			$('#commentsData').append('<div class="bg-info commentOuter"><div class="left"><img src="img/user.svg" alt="User" class="img-circle userImage"></div><div class="left commentFullWidth"><div class="commentName">'+data.username+'</div><div class="commentText">'+decodeURIComponent(data.text)+'</div><div class="commentDate">'+day+month+year+hour+minute+'</div></div><div class="clear"></div></div>');
 			})
-			
-			/*$.each(obj, function (key, data) {
-    			$('#comments').append(key);
-    			$.each(data, function (index, data) {
-    				$('#comments').append(data);
-    			})
-			})*/
+			setSizes();
 		}
 	});
 }
@@ -135,8 +197,9 @@ $(window).on('resize', function(){
 
 function setSizes() {
 	$('#commentArea').css('width',$(".commentRow").width()-95);
+	$('.commentFullWidth').css('width',$(".commentRow").width()-105);
 	if($(".resultRow").height()<=300) {
-		$('#result').css('padding',$(".resultRow").height()-$(".resultRow").height()/2-38+'px 0 0 75px');
+		$('#result').css('padding',$(".resultRow").height()-$(".resultRow").height()/2-54+'px 0 0 75px');
 	}
 	else
 		$('#result').css('padding','15px 15px 0 15px');
@@ -147,7 +210,7 @@ function saveComment() {
 		url: "inc/saveComment.php",
 		type: "POST",
 		dataType:'json',
-		data: {"comment":encodeURIComponent($("[name=comment]").val()),"plate":encodeURIComponent($("#plate").val())},
+		data: {"comment":encodeURIComponent($("[name=comment]").val()),"plate":encodeURIComponent($("#plate").val().toUpperCase())},
 		success: function(obj) {
 			emptyCommentField('',true);
 			$('.selectedCommentArea').hide();
@@ -163,15 +226,85 @@ function getProtocol(dontReopen) {
 		dataType:'json',
 		data: {},
 		success: function(obj) {
-			console.log("dosmthg");
 			$('#protocolData').html('');
-			$.each(obj, function (key, data) {
-    			$('#protocolData').append('<div class="protocolBox">'+data.username+' '+decodeURIComponent(data.text)+' <span onClick="deleteActivity('+data.id+')">[x]</span>'+'</div>');
+			$.each(obj['comment'], function (key, data) {
+				hour = data.date.substr(11,2)+':';
+				minute = data.date.substr(14,2)+' Uhr';
+				day = data.date.substr(8,2)+'.';
+				month = data.date.substr(5,2)+'.';
+				year = data.date.substr(0,4)+' um ';
+				comment = decodeURIComponent(data.text);
+				if(comment.length>15)
+					comment = comment.substr(0,15)+' ...';
+    			$('#protocolData').append('<tr><td>'+day+month+year+hour+minute+'</td><td>'+comment+'</td><td><span onClick="editComment('+data.id+')"><button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button></span>&nbsp;<span onClick="deleteActivity('+data.id+')"><button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></span></td></tr>');
+			})
+			$('#protocolDataLikes').html('');
+			$.each(obj['likeplace'], function (key, data) {
+				hour = data.date.substr(11,2)+':';
+				minute = data.date.substr(14,2)+' Uhr';
+				day = data.date.substr(8,2)+'.';
+				month = data.date.substr(5,2)+'.';
+				year = data.date.substr(0,4)+' um ';
+				county = data.county;
+				state = data.state;
+				if(county.length>15)
+					county = county.substr(0,15)+' ...';
+				if(state.length>15)
+					state = state.substr(0,15)+' ...';
+    			$('#protocolDataLikes').append('<tr><td>'+day+month+year+hour+minute+'</td><td>'+county+'</td><td>'+state+'</td><td><span onClick="dontLikePlace(\''+data.plate+'\'); getProtocol('+true+')"><button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></span></td></tr>');
 			})
 			if(!dontReopen)
 				$('#protocolDialog').modal('toggle');
 		}
 	});
+}
+
+function editComment(id) {
+	$.ajax({
+		url: "inc/getComment.php",
+		type: "POST",
+		dataType:'json',
+		data: {"id":id},
+		success: function(obj){
+			console.log(obj.text);
+			$('[name=editComment]').val(obj.text);
+			$('[name=commentId]').val(id);
+			$('#protocolDialog').modal('toggle');
+			$('#editComment').modal('toggle');
+		}
+	});
+}
+
+function saveEditComment() {
+	$.ajax({
+		url: "inc/saveEditComment.php",
+		type: "POST",
+		dataType:'json',
+		data: {"id":encodeURIComponent($('[name=commentId]').val()),"text":encodeURIComponent($('[name=editComment]').val())},
+		success: function(obj){
+			$('#editComment').modal('toggle');
+			getProtocol();
+			if($('.commentRow').is(":visible")) {
+				getComments();
+			}
+		}
+	});
+}
+
+function protocolSwitchTo(choice) {
+	if(choice=="comments") {
+		$('#protocolComments').show();
+		$('#protocolLikes').hide();
+		$('#navProtocolComments').attr('class','active');
+		$('#navProtocolLikes').removeAttr('class');
+		
+	}
+	else if(choice=="likes") {
+		$('#protocolComments').hide();
+		$('#protocolLikes').show();
+		$('#navProtocolComments').removeAttr('class');
+		$('#navProtocolLikes').attr('class','active');
+	}
 }
 
 function deleteActivity(id) {
@@ -220,11 +353,17 @@ function checkLoginStatus() {
 			if(obj.loggedIn) {
 				$('.notauthenticated').hide(); 
 				$('.authenticated').show();
+				$('.laterAuthenticated').show();
 				getUsername();
+				if($('.resultRow').is(":visible")) {
+					checkMyLike();
+					getPlaceLikes();
+				}
 			}
 			else {
 				$('.notauthenticated').show(); 
 				$('.authenticated').hide(); 
+				$('.laterAuthenticated').hide(); 
 			}
 		}
 	});

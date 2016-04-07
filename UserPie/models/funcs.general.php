@@ -142,11 +142,11 @@ function destorySession($name)
     session_regenerate_id(true);
 }
 
-// Update the session data
+//  the session data
 // Remember-Me Hack v0.03
 // <http://rememberme4uc.sourceforge.net/>
 
-function updateSessionObj()
+function SessionObj()
 {
 	global $loggedInUser,$db,$db_table_prefix;
 

@@ -15,12 +15,12 @@ class loggedInUser {
 	public $remember_me = NULL;
 	public $remember_me_sessid = NULL;
 	
-	//Simple function to update the last sign in of a user
-	public function updatelast_sign_in()
+	//Simple function to  the last sign in of a user
+	public function last_sign_in()
 	{
 		global $db,$db_table_prefix;
 		
-		$sql = "UPDATE ".$db_table_prefix."users
+		$sql = " ".$db_table_prefix."users
 			    SET
 				last_sign_in = '".time()."'
 				WHERE
@@ -48,8 +48,8 @@ class loggedInUser {
 		return ($row['sign_up_date']);
 	}
 	
-	//Update a users password
-	public function updatepassword($pass)
+	// a users password
+	public function password($pass)
 	{
 		global $db,$db_table_prefix;
 		
@@ -57,9 +57,9 @@ class loggedInUser {
 		
 		$this->hash_pw = $secure_pass;
 if($this->remember_me == 1)
-updateSessionObj();
+SessionObj();
 		
-		$sql = "UPDATE ".$db_table_prefix."users
+		$sql = " ".$db_table_prefix."users
 		       SET
 			   password = '".$db->sql_escape($secure_pass)."' 
 			   WHERE
@@ -68,14 +68,14 @@ updateSessionObj();
 		return ($db->sql_query($sql));
 	}
 	
-	//Update a users email
-	public function updateemail($email)
+	// a users email
+	public function email($email)
 	{
 		global $db,$db_table_prefix;
 		
 		$this->email = $email;
 if($this->remember_me == 1)
-updateSessionObj();
+SessionObj();
 		
 		$sql = "UPDATE ".$db_table_prefix."users
 				SET email = '".$email."'

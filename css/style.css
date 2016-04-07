@@ -1,6 +1,6 @@
 @font-face {
 font-family: NumberPlate;
-src: url("../font/GL-Nummernschild-Eng.otf") format("opentype");
+src: url("../fonts/GL-Nummernschild-Eng.otf") format("opentype");
 }
 
 body {
@@ -87,6 +87,9 @@ input#plate::-webkit-input-placeholder {
 .left {
 	float:left;
 }
+.right {
+	float:left;
+}
 .clear {
 	clear:both;
 }
@@ -94,6 +97,13 @@ input#plate::-webkit-input-placeholder {
 	width:80%;
 }
 #commentArea {
+	width:100%;
+	min-height:65px;
+	padding:5px 10px;
+	border:1px solid #CCC;
+	border-radius:5px;
+}
+#editCommentArea {
 	width:100%;
 	min-height:65px;
 	padding:5px 10px;
@@ -139,6 +149,13 @@ input#plate::-webkit-input-placeholder {
 	margin:10px 0;
 	font-weight:bold;
 }
-.form {
-
+.actionList {
+	margin:10px 0 0 0;
+}
+.likePlace {
+	font-size:12px;
+	color:#777;
+}
+#protocolLikes {
+	display:none;
 }

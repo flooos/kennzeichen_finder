@@ -1,8 +1,13 @@
 <?php 
 require_once("../UserPie/models/config.php");
 
-$db->sql_query("SELECT * FROM comment INNER JOIN userpie_users ON comment.user=userpie_users.user_id WHERE comment.user='".$loggedInUser->user_id."' ORDER BY comment.id DESC");
+$db->sql_query("SELECT * FROM comment WHERE user='".$loggedInUser->user_id."' ORDER BY id DESC");
 $dbRes = $db->sql_fetchrowset();
 
-print json_encode($dbRes);
+$db->sql_query("SELECT * FROM likeplace lp INNER JOIN plate pl ON lp.plate=pl.plate WHERE lp.user='".$loggedInUser->user_id."' ORDER BY lp.id DESC");
+$dbRes2 = $db->sql_fetchrowset();
+
+$result = array( "comment" => $dbRes, "likeplace" => $dbRes2 );
+
+print json_encode($result);
 ?>
