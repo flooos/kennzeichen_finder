@@ -256,6 +256,7 @@ function deleteActivity(id) {
 		data: {"id":id},
 		success: function(obj) {
 			getProtocol(true);
+			getComments();
 		}
 	});
 }
