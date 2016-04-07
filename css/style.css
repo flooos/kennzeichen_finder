@@ -128,3 +128,17 @@ input#plate::-webkit-input-placeholder {
 .state {
 	font-size:24px;
 }
+.error {
+	padding:10px 15px;
+}
+.formLable {
+	margin:15px 0;
+	font-weight:bold;
+}
+.formInput {
+	margin:10px 0;
+	font-weight:bold;
+}
+.form {
+
+}

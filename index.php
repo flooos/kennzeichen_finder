@@ -130,14 +130,24 @@ require_once("UserPie/models/config.php");
                         <div class="modal-body">
                             <div id="loginError">
                             </div>
-                            <p>
-                                <label>Nutzername:</label>
-                                <input type="text"  name="username" />
-                            </p>
-                            <p>
-                                <label>Passwort:</label>
-                                <input type="password" name="password" />
-                            </p>
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <div class="formLable">
+                                        Nutzername:
+                                    </div>
+                                    <div class="formLable">
+                                        Passwort:
+                                    </div>
+                                </div>
+                                <div class="col-xs-10">
+                                    <div class="formInput">
+                                        <input type="text" class="form" name="username" />
+                                    </div>
+                                    <div class="formInput">
+                                        <input type="password" class="form" name="password" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <input type="submit" class="btn btn-primary" id="newfeedform" value="Anmelden" />
@@ -177,29 +187,40 @@ require_once("UserPie/models/config.php");
                             <div id="registerError">
                             </div>
                             <div class="registerForm">
-                                <p>
-                                    <label>Nutzername:</label>
-                                    <input type="text" name="reg_username" />
-                                </p>
-                                
-                                <p>
-                                    <label>Passwort:</label>
-                                    <input type="password" name="reg_password" />
-                                </p>
-                                
-                                <p>
-                                    <label>Passwort wiederholen:</label>
-                                    <input type="password" name="reg_passwordc" />
-                                </p>
-                                
-                                <p>
-                                    <label>E-Mail:</label>
-                                    <input type="email" name="reg_email" />
-                                </p>    
+                                <div class="row">
+                                    <div class="col-xs-5 col-sm-3">
+                                    	<div class="formLable">
+                                        	Nutzername:
+                                        </div>
+                                    	<div class="formLable">
+                                        	Passwort:
+                                        </div>
+                                    	<div class="formLable">
+                                        	Passwort wdh:
+                                        </div>
+                                    	<div class="formLable">
+                                        	E-Mail:
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7 col-sm-9">
+                                   		<div class="formInput">
+                                    		<input type="text" name="reg_username" />
+                                        </div>
+                                   		<div class="formInput">
+                                			<input type="password" name="reg_password" />
+                                        </div>
+                                   		<div class="formInput">
+                                			<input type="password" name="reg_passwordc" />
+                                        </div>
+                                   		<div class="formInput">
+                                			<input type="email" name="reg_email" />
+                                        </div>
+                                    </div>
+                                </div> 
                             </div>
                             <div class="registerDone">
                                 <p>
-                                    Sie haben sich erfolgreich registriert und können sich nun einloggen!
+                                    Sie haben sich erfolgreich registriert und können sich nun anmelden!
                                 </p>
                             </div>
                         </div>
@@ -209,6 +230,7 @@ require_once("UserPie/models/config.php");
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
                             </div>
                             <div class="registerDone">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" onClick="switchToLogin()">Zur Anmeldung</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
                             </div>
                         </div>
@@ -240,7 +262,7 @@ require_once("UserPie/models/config.php");
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
         
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeaL0cr-RyGcEASkTnjCgYROXxi38cAf4&signed_in=true&callback=initMap"
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeaL0cr-RyGcEASkTnjCgYROXxi38cAf4&signed_in=false&callback=initMap"
         async defer></script>
         
         <script src="js/kennzeichen_finder.js"></script>

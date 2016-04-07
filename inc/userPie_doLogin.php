@@ -101,8 +101,9 @@ setcookie("userPieUser", $loggedInUser->remember_me_sessid, time()+parseLength($
 				}
 			}
 		}
-		else
-			$status = array( "loggedIn" => false, "errors" => implode("<p>&middot; ", $errors));
+		
+		if(count($errors) !== 0)
+			$status = array( "loggedIn" => false, "errors" => $errors);
 			
 		print json_encode($status);
 	}

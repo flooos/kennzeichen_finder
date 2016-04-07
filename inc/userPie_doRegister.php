@@ -54,7 +54,7 @@ if(!empty($_POST))
 		{	
 				//Construct a user object
 				$user = new User($username,$password,$email);
-				echo '{"registered":true}';
+				$status = array( "registered" => true);
 				
 				//Checking this flag tells us whether there were any errors such as possible data duplication occured
 				if(!$user->status)
@@ -83,7 +83,7 @@ if(!empty($_POST))
 	   }
 	   else
 	   {
-				$status = array( "registered" => false, "errors" => implode("<p>&middot; ", $errors));
+				$status = array( "registered" => false, "errors" => $errors);
 	   }
 	   print json_encode($status);
 	}

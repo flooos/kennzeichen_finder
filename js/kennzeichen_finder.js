@@ -39,21 +39,26 @@ function doLogin() {
 		url: "inc/userPie_doLogin.php",
 		type: "POST",
 		dataType:'json',
-		data: {"username":encodeURIComponent($("[name=username]").val()),"password":encodeURIComponent($("[name=password]").val())},
+		data: {"username":encodeURIComponent($("[name=username]").val()),"password":$("[name=password]").val()},
 		success: function(obj){
 			if(obj.loggedIn) {
-				console.log("eingeloggt");
 				checkLoginStatus();
 				$('#loginError').hide();
 				$('#loginDialog').modal('toggle'); 
 			}
 			else {
-				console.log("nicht eingeloggt");
 				$('#loginError').show();
-				$('#loginError').html(obj.errors);
+				$.each(obj.errors, function (key, data) {
+					$('#loginError').append('<p class="bg-warning error">&middot; '+data+'</p>');
+				})
 			}
 		}
 	});
+}
+
+function switchToLogin() {
+	$('#registerDialog').modal('toggle'); 
+	$('#loginDialog').modal('toggle'); 
 }
 
 function getUsername() {
@@ -74,7 +79,7 @@ function doRegister() {
 		url: "inc/userPie_doRegister.php",
 		type: "POST",
 		dataType:'json',
-		data: {"username":encodeURIComponent($("[name=reg_username]").val()),"password":encodeURIComponent($("[name=reg_password]").val()),"passwordc":encodeURIComponent($("[name=reg_passwordc]").val()),"email":$("[name=reg_email]").val()},
+		data: {"username":encodeURIComponent($("[name=reg_username]").val()),"password":$("[name=reg_password]").val(),"passwordc":$("[name=reg_passwordc]").val(),"email":$("[name=reg_email]").val()},
 		success: function(obj){
 			if(obj.registered) {
 				console.log("registriert");
@@ -85,7 +90,9 @@ function doRegister() {
 			else {
 				console.log("nicht registriert");
 				$('#registerError').show();
-				$('#registerError').html(obj.errors);
+				$.each(obj.errors, function (key, data) {
+					$('#registerError').append('<p class="bg-warning error">&middot; '+data+'</p>');
+				})
 				$('.registerForm').show();
 				$('.registerDone').hide();
 			}
